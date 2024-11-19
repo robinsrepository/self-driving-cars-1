@@ -1,4 +1,4 @@
-# Self Driving Cars Part 1
+# Self Driving Cars Part 1 🚗
 
 ## Description
 
@@ -37,7 +37,7 @@ Of course, once I finish the second part I will upload it to GitHub as well.
 
 1. Clone or download the repository.
 2. Open the index.html file in your browser.
-3. Enjoy exploring the different Canvas projects!
+3. Try clicking the buttons and see how it works!
 
 
 
