@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>World Editor</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <h1>World Editor</h1>
+    <canvas id="myCanvas"></canvas>
+    <div id="controls">
+        <!-- making some buttons to add and delete points and segments like you would do 30 years ago -->
+        <button onclick="addRandomPoint()">add point</button>
+        <button onclick="addRandomSegment()">add segment</button>
+        <button onclick="removeRandomSegment()">remove segment</button>
+        <button onclick="removeRandomPoint()">remove point</button>
+        <button onclick="removeAll()">remove all</button>
+    </div>
+
+    <script src="js/math/graph.js"></script>
+    <script src="js/primitives/point.js"></script>
+    <script src="js/primitives/segment.js"></script>
+    <script>
+        // clear everything from the graph
+        function removeAll() {
+            graph.dispose();
+            ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        }
+        function removeRandomPoint() {
+                // first check if there are any points
+                if (graph.points.length == 0) {
+                    // to check if there is nothing to remove
+                    console.log("no points");
+                    return;
+                }
+                // otherwise I get a random index from the points this time
+                const index = Math.floor(Math.random() * graph.points.length);
+                // and then remove the point at that index
+                graph.removePoint(graph.points[index]);
+                // to see the changes
+                ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                graph.draw(ctx);
+            }
+
+        function removeRandomSegment() {
+            // first check if there are any segments
+            if (graph.segments.length == 0) {
+                // to check if there is nothing to remove
+                console.log("no segments");
+                return;
+            }
+            // otherwise I get a random index from the segments this time
+            const index = Math.floor(Math.random() * graph.segments.length);
+            // and then remove the segment at that index
+            graph.removeSegment(graph.segments[index]);
+            // to see the changes
+            ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            graph.draw(ctx);
+        }
+
+        // this function first gets the points I want to connect and then creates the segment
+        function addRandomSegment() {
+            // using floor to make sure I get an integer value multiplying it by the number of points, I get the points at random
+            const index1 = Math.floor(Math.random() * graph.points.length);
+            const index2 = Math.floor(Math.random() * graph.points.length);
+            // to prevent segments drawing from one index to the same one, add if statement
+            const success = graph.tryAddSegment(
+                    new Segment(graph.points[index1], graph.points[index2])
+                );
+            // to see the changes
+            ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            graph.draw(ctx);
+            console.log(success);
+        }
+
+        function addRandomPoint() {
+            const success = graph.tryAddPoint(
+                new Point(
+                    Math.random() * myCanvas.width, 
+                    Math.random() * myCanvas.height
+                )
+            );
+            // to see the changes
+            ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            graph.draw(ctx);
+            console.log(success);
+        }
+
+        myCanvas.width = 600;
+        myCanvas.height = 600;
+
+        const ctx = myCanvas.getContext("2d");
+
+        // create some points to pass into the graph
+        const p1 = new Point(200, 200);
+        const p2 = new Point(500, 200);
+        const p3 = new Point(400, 400);
+        const p4= new Point(100, 300);
+
+        // create the segments connecting the points
+        const s1 = new Segment(p1, p2);
+        const s2 = new Segment(p1, p3);
+        const s3 = new Segment(p1, p4);
+        const s4 = new Segment(p2, p3);
+
+        // pass the points as an array into the graph
+        // pass the segments as the second attribute
+        const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
+        graph.draw(ctx);
+    </script>
+</body>
+</html>
